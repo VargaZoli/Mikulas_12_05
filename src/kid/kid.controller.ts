@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Patch, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, Delete, HttpException, HttpStatus,Put } from '@nestjs/common';
 import { KidService } from './kid.service';
 import { CreateKidDto } from './dto/create-kid.dto';
 import { UpdateKidDto } from './dto/update-kid.dto';
@@ -9,23 +9,16 @@ import { AddToyToKidDto } from './dto/add-toy-to-kid.dto';
 export class KidController {
   constructor(private readonly kidService: KidService) {}
 
-  @Post('jatekfelvetel')
-  async assignToyToKid(@Body() addToyToKidDto: AddToyToKidDto) {
-    const { kidId, toyId } = addToyToKidDto;
-
-    const kid = await this.kidService.findOne(kidId);
-    if (!kid) {
-      throw new HttpException('Nincs ilyen gyerek', HttpStatus.NOT_FOUND);
-    }
-    
-
-    try {
-      await this.kidService.addToyToKid(kidId, toyId);
-      return { message: 'Sikeres játék hozzáadás a gyerekhez' };
-    } catch (error) {
-      throw new HttpException('Hiba a játék hozzáadásánál', HttpStatus.BAD_REQUEST);
-    }
+  @Put(':kidId/toy/:toyId')
+  addToyToKid(@Param('kidId') kidId: string, @Param('toyId') toyId: string) {
+    return this.kidService.addToyToKid(Number(kidId), Number(toyId));
   }
+    
+  @Delete(':kidId/toy/:toyId')
+  removeToyFromKid(@Param('kidId') kidId: string, @Param('toyId') toyId: string) {
+    return this.kidService.removeToyFromKid(Number(kidId), Number(toyId));
+  }
+
 
 
   @Post()

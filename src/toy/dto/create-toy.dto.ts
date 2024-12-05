@@ -1,1 +1,5 @@
-export class CreateToyDto {}
+export class CreateToyDto {
+    name: string;
+  Material: string;
+  Weight: number;
+}

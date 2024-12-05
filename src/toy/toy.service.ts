@@ -11,6 +11,11 @@ export class ToyService {
   constructor(private readonly prisma: PrismaService) {}
 
 
+  async addToy(data: CreateToyDto): Promise<Toy> {
+    return this.prisma.toy.create({
+      data,
+    });
+  }
 
   async findAll(): Promise<Toy[]> {
     return this.prisma.toy.findMany()

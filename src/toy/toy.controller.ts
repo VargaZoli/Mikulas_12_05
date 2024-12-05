@@ -5,29 +5,10 @@ import { UpdateToyDto } from './dto/update-toy.dto';
 import { AddToyToKidDto } from '../kid/dto/add-toy-to-kid.dto';
 
 
-
-
-
-
-
-
 @Controller('toy')
 export class ToyController {
   constructor(private readonly toyService: ToyService) {}
 
-
-  @Post()
-  async create(@Body() createToyDto: CreateToyDto) {
-    try {
-      const newToy = await this.toyService.create(createToyDto);
-      return { message: 'sikeres játék létrehozás', data: newToy };
-    } catch (error) {
-      throw new HttpException(
-        'Hiba a játék létrehozásánál.',
-        HttpStatus.BAD_REQUEST
-      );
-    }
-  }
 
   @Get()
   async findAll() {
@@ -47,6 +28,12 @@ export class ToyController {
       );
     }
   }
+  
+  @Post()
+  addToy(@Body() createToyDto: CreateToyDto) {
+    return this.toyService.addToy(createToyDto);
+  }
+
 
   @Get(':id')
   async findOne(@Param('id') id: string) {

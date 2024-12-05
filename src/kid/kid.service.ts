@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable,NotFoundException } from '@nestjs/common';
 import { CreateKidDto } from './dto/create-kid.dto';
 import { UpdateKidDto } from './dto/update-kid.dto';
 import { PrismaService } from '../prisma.service'; 
@@ -15,27 +15,28 @@ export class KidService {
   }
 
 
-  async addToyToKid(kidId: number, toyId: number): Promise<void> {
-    await this.prisma.kid.update({
-      where: { id: kidId },
-      data: {
-        toys: {
-          connect: { id: toyId },  
-        },
-      },
-    });
+  async addToyToKid(kidId: number, toyId: number) {
+    try {
+      return await this.prisma.kid.update({
+        where: { id: kidId },
+        data: { toys: { connect: { id: toyId } } },
+      });
+    } catch {
+      throw new NotFoundException('Kid or Toy not found');
+    }
   }
 
-  async removeToyFromKid(kidId: number, toyId: number): Promise<void> {
-    await this.prisma.kid.update({
-      where: { id: kidId },
-      data: {
-        toys: {
-          disconnect: { id: toyId }, 
-        },
-      },
-    });
+  async removeToyFromKid(kidId: number, toyId: number) {
+    try {
+      return await this.prisma.kid.update({
+        where: { id: kidId },
+        data: { toys: { disconnect: { id: toyId } } },
+      });
+    } catch {
+      throw new NotFoundException('Kid or Toy not found');
+    }
   }
+
 
 
 
