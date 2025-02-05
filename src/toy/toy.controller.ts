@@ -3,13 +3,25 @@ import { ToyService } from './toy.service';
 import { CreateToyDto } from './dto/create-toy.dto';
 import { UpdateToyDto } from './dto/update-toy.dto';
 import { AddToyToKidDto } from '../kid/dto/add-toy-to-kid.dto';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiParam, ApiResponse } from '@nestjs/swagger';
+
 
 
 @Controller('toy')
+@ApiBearerAuth()
+
 export class ToyController {
   constructor(private readonly toyService: ToyService) {}
 
 
+
+  /**
+   * Modifies the details of an existing toy
+   * 
+   * @param id The unique ID of the toy
+   * @param updatePhoneDto The data to get a toy
+   * @returns JSON response
+   */
   @Get()
   async findAll() {
     try {
@@ -29,12 +41,29 @@ export class ToyController {
     }
   }
   
+  /**
+   * Modifies the details of an existing toy
+   * 
+   * @param id The unique ID of the toy
+   * @param updatePhoneDto The data to post a toy
+   * @returns JSON response
+   */
   @Post()
   addToy(@Body() createToyDto: CreateToyDto) {
     return this.toyService.addToy(createToyDto);
   }
 
 
+
+
+  
+  /**
+   * Modifies the details of an existing toy
+   * 
+   * @param id The unique ID of the toy
+   * @param updatePhoneDto The data to modify post a new toy
+   * @returns JSON response
+   */
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {
@@ -54,7 +83,33 @@ export class ToyController {
     }
   }
 
+
+
+
+    /**
+   * Modifies the details of an existing toy
+   * 
+   * @param id The unique ID of the toy
+   * @param updateToyDto The data to modify
+   * @returns JSON response
+   */
   @Patch(':id')
+  @ApiParam({
+    name: 'id',
+    type: 'number',
+    description: 'The unique ID of the toy'
+  })
+
+
+
+  
+  /**
+   * Modifies the details of an existing toy
+   * 
+   * @param id The unique ID of the toy
+   * @param updatePhoneDto The data to update toy
+   * @returns JSON response
+   */
   async update(@Param('id') id: string, @Body() updateToyDto: UpdateToyDto) {
     try {
       const updatedToy = await this.toyService.update(+id, updateToyDto);
@@ -73,6 +128,17 @@ export class ToyController {
     }
   }
 
+
+
+
+  
+  /**
+   * Deletes the details of an existing toy
+   * 
+   * @param id The unique ID of the toy
+   * @param updatePhoneDto The data to delete the toy
+   * @returns JSON response
+   */
   @Delete(':id')
   async remove(@Param('id') id: string) {
     try {
